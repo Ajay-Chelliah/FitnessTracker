@@ -91,21 +91,24 @@ file_path = "../../notebook/Data/Raw\\"
 
 
 def create_data(files):
-    acc_df = pd.DataFrame()
-    gyro_df = pd.DataFrame()
-    acc_count = 1
-    gyro_count = 1
+    acc_df = pd.DataFrame()  # Empty DataFrame to store the Accelerometer data
+    gyro_df = pd.DataFrame()  # Empty DataFrame to store the Gyroscope data
+    acc_count = 1  # Counter to find the number of CSV files on acclerometer
+    gyro_count = 1  # Counter to find the number of CSV files on gyroscope
 
     for f in files:
+        # Getting the participant, label (Exercise name) , category (Heavy/light)
         participant = f.split("-")[0].replace(file_path, "")
         label = f.split("-")[1]
         category = f.split("-")[2].rstrip("_MetaWear_2019").rstrip("123")
 
+        # Creating a dataframe from the CSV file and then creating new columns for the above variables.
         df = pd.read_csv(f)
         df["Participant"] = participant
         df["Label"] = label
         df["Category"] = category
 
+        # Seperating the CSV files into two dataframes (Accelerometer & Gyroscope)
         if "Accelerometer" in f:
             df["Set"] = acc_count
             acc_count += 1
@@ -116,8 +119,11 @@ def create_data(files):
             gyro_count += 1
             gyro_df = pd.concat([gyro_df, df])
 
+    # Converting the datatype of 'epoch (ms)' column from object into "Datetime" and the using it as an index.
     acc_df.index = pd.to_datetime(acc_df["epoch (ms)"], unit="ms")
     gyro_df.index = pd.to_datetime(gyro_df["epoch (ms)"], unit="ms")
+
+    # Removing the not important columns
     del acc_df["epoch (ms)"]
     del acc_df["time (01:00)"]
     del acc_df["elapsed (s)"]
@@ -126,17 +132,19 @@ def create_data(files):
     del gyro_df["time (01:00)"]
     del gyro_df["elapsed (s)"]
 
-    return acc_df, gyro_df
+    return acc_df, gyro_df  # Returning the two Dataframes
 
 
 data_path = "../../notebook/Data/Raw/*.csv"
-files = glob(data_path)
+files = glob(data_path)  # Storing all the csv files into a variable
 acc_df, gyro_df = create_data(files)
 
 # --------------------------------------------------------------
 # Merging datasets
 # --------------------------------------------------------------
-data_merged = pd.concat([acc_df.iloc[:, :3], gyro_df], axis=1)
+data_merged = pd.concat(
+    [acc_df.iloc[:, :3], gyro_df], axis=1
+)  # Merging the two Dataframe by removing the repeating columns like Participant, label, Category.
 data_merged.columns = [
     "acc_x",
     "acc_y",
@@ -148,7 +156,7 @@ data_merged.columns = [
     "category",
     "participant",
     "set",
-]
+]  # Changing the columns names.
 
 # --------------------------------------------------------------
 # Resample data (frequency conversion)
@@ -182,7 +190,9 @@ data_resample["set"] = data_resample["set"].astype("int")
 # Export dataset
 # --------------------------------------------------------------
 
-data_resample.to_pickle("../../artifacts/data_resample.pkl")
+data_resample.to_pickle(
+    "../../artifacts/data_resample.pkl"
+)  # Saving the Data in pickle file format.
 
 # save_object(
 #     file_path='../../artifacts/Data_resample.pkl',
