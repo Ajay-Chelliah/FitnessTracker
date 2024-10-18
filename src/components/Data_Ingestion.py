@@ -1,5 +1,6 @@
 import pandas as pd
 from glob import glob
+from src.logger import logging
 
 # # --------------------------------------------------------------
 # # Read single CSV file
@@ -198,3 +199,4 @@ data_resample.to_pickle(
 #     file_path='../../artifacts/Data_resample.pkl',
 #     obj=data_resample
 # )
+logging.info("Data_resample is Saved in pickle format")
