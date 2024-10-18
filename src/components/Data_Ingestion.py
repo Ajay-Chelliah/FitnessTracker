@@ -166,6 +166,11 @@ data_merged.columns = [
 # Accelerometer:    12.500HZ
 # Gyroscope:        25.000Hz
 
+# Step 1 : Defined the function sampling which contains the aggreagtion methods which is used to apply on the dataframe for downsampling
+# Step 2 : Done downsampling for the first 100 rows to evaluate the time taken for it.
+# Step 3 : First We grouped the Whole dataframe into groups with respect to Days. Hence 10 groups are formed (11 - 20) and stored inside a list
+# Step 4 : Secondly We iterate over the list and do downsampling for each groups seperately and then concatenate the groups one by one forming a single DataFrame
+
 sampling = {
     "acc_x": "mean",
     "acc_y": "mean",
@@ -185,6 +190,7 @@ days = [g for n, g in data_merged.groupby(pd.Grouper(freq="D"))]
 data_resample = pd.concat(
     [df.resample(rule="200ms").apply(sampling).dropna() for df in days]
 )
+# Converting the Datatype of the Set column from float to int
 data_resample.info()
 data_resample["set"] = data_resample["set"].astype("int")
 # --------------------------------------------------------------
