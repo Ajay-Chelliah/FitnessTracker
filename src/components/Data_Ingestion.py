@@ -1,6 +1,6 @@
 import pandas as pd
 from glob import glob
-from src.logger import logging
+#from src.logger import logging
 
 # # --------------------------------------------------------------
 # # Read single CSV file
@@ -153,9 +153,9 @@ data_merged.columns = [
     "gyro_x",
     "gyro_y",
     "gyro_z",
+    "participant",
     "label",
     "category",
-    "participant",
     "set",
 ]  # Changing the columns names.
 
@@ -178,9 +178,9 @@ sampling = {
     "gyro_x": "mean",
     "gyro_y": "mean",
     "gyro_z": "mean",
+    "participant": "last",
     "label": "last",
     "category": "last",
-    "participant": "last",
     "set": "last",
 }
 
@@ -205,4 +205,4 @@ data_resample.to_pickle(
 #     file_path='../../artifacts/Data_resample.pkl',
 #     obj=data_resample
 # )
-logging.info("Data_resample is Saved in pickle format")
+#logging.info("Data_resample is Saved in pickle format")
