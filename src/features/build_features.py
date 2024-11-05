@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 # Load data
 # --------------------------------------------------------------
 
-df = pd.read_pickle("../../data/interim/02_outliers_removed_chauvenets.pkl")
+df = pd.read_pickle("../../artifacts/outliers_removed_chauvenets.pkl")
 
 predictor_columns = list(df.columns[:6])
 
@@ -238,4 +238,4 @@ plt.show()
 # Export dataset
 # --------------------------------------------------------------
 
-df_cluster.to_pickle("../../data/interim/03_data_features.pkl")
+df_cluster.to_pickle("../../artifacts/03_data_features.pkl")

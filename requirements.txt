@@ -7,3 +7,4 @@ jupyter-core
 matplotlib
 dill
 scikit-learn
+seaborn
