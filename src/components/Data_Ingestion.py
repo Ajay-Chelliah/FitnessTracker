@@ -1,88 +1,88 @@
 import pandas as pd
 from glob import glob
-#from src.logger import logging
 
-# --------------------------------------------------------------
-# Read single CSV file
-# --------------------------------------------------------------
 
-single_file_acc = pd.read_csv(
-    "../../notebook/Data/Raw/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
-)
-single_file_gyro = pd.read_csv(
-    "../../notebook/Data/Raw/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
-)
-# --------------------------------------------------------------
-# List all data in data\raw
-# --------------------------------------------------------------
+# # --------------------------------------------------------------
+# # Read single CSV file
+# # --------------------------------------------------------------
 
-files = glob("../../notebook/Data/Raw/*.csv")
-file_len = len(files)
+# single_file_acc = pd.read_csv(
+#     "../../notebook/Data/Raw/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
+# )
+# single_file_gyro = pd.read_csv(
+#     "../../notebook/Data/Raw/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
+# )
+# # --------------------------------------------------------------
+# # List all data in data\raw
+# # --------------------------------------------------------------
 
-# --------------------------------------------------------------
-# Extract features from filename
-# --------------------------------------------------------------
+# files = glob("../../notebook/Data/Raw/*.csv")
+# file_len = len(files)
 
-data_path = "../../notebook/Data/Raw\\"
-f = files[0]
-participant = f.split("-")[0].replace(data_path, "")
-label = f.split("-")[1]
-category = f.split("-")[2][:-1]
+# # --------------------------------------------------------------
+# # Extract features from filename
+# # --------------------------------------------------------------
 
-df = pd.read_csv(f)
+# data_path = "../../notebook/Data/Raw\\"
+# f = files[0]
+# participant = f.split("-")[0].replace(data_path, "")
+# label = f.split("-")[1]
+# category = f.split("-")[2][:-1]
 
-df["Participant"] = participant
-df["Lable"] = label
-df["Category"] = category
+# df = pd.read_csv(f)
 
-# --------------------------------------------------------------
-# Read all files
-# --------------------------------------------------------------
+# df["Participant"] = participant
+# df["Lable"] = label
+# df["Category"] = category
 
-acc_df = pd.DataFrame()
-gyro_df = pd.DataFrame()
-acc_set = 1
-gyro_set = 1
+# # --------------------------------------------------------------
+# # Read all files
+# # --------------------------------------------------------------
 
-data_path = "../notebook/Data/Raw\\"
-for f in files:
-    participant = f.split("-")[0].replace(data_path, "")
-    label = f.split("-")[1]
-    category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
+# acc_df = pd.DataFrame()
+# gyro_df = pd.DataFrame()
+# acc_set = 1
+# gyro_set = 1
 
-    df = pd.read_csv(f)
-    df["Participant"] = participant
-    df["Label"] = label
-    df["Category"] = category
+# data_path = "../notebook/Data/Raw\\"
+# for f in files:
+#     participant = f.split("-")[0].replace(data_path, "")
+#     label = f.split("-")[1]
+#     category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
-    if "Accelerometer" in f:
-        df["Set"] = acc_set
-        acc_set += 1
-        acc_df = pd.concat([acc_df, df])
+#     df = pd.read_csv(f)
+#     df["Participant"] = participant
+#     df["Label"] = label
+#     df["Category"] = category
 
-    elif "Gyroscope" in f:
-        df["Set"] = gyro_set
-        gyro_set += 1
-        gyro_df = pd.concat([gyro_df, df])
+#     if "Accelerometer" in f:
+#         df["Set"] = acc_set
+#         acc_set += 1
+#         acc_df = pd.concat([acc_df, df])
 
-# --------------------------------------------------------------
-# Working with datetimes
-# --------------------------------------------------------------
+#     elif "Gyroscope" in f:
+#         df["Set"] = gyro_set
+#         gyro_set += 1
+#         gyro_df = pd.concat([gyro_df, df])
 
-acc_df.info()
-pd.to_datetime(df["epoch (ms)"], unit="ms")
-pd.to_datetime(df["time (01:00)"]).dt.day_of_week
+# # --------------------------------------------------------------
+# # Working with datetimes
+# # --------------------------------------------------------------
 
-acc_df.index = pd.to_datetime(acc_df["epoch (ms)"], unit="ms")
-gyro_df.index = pd.to_datetime(gyro_df["epoch (ms)"], unit="ms")
+# acc_df.info()
+# pd.to_datetime(df["epoch (ms)"], unit="ms")
+# pd.to_datetime(df["time (01:00)"]).dt.day_of_week
 
-del acc_df["epoch (ms)"]
-del acc_df["time (01:00)"]
-del acc_df["elapsed (s)"]
+# acc_df.index = pd.to_datetime(acc_df["epoch (ms)"], unit="ms")
+# gyro_df.index = pd.to_datetime(gyro_df["epoch (ms)"], unit="ms")
 
-del gyro_df["epoch (ms)"]
-del gyro_df["time (01:00)"]
-del gyro_df["elapsed (s)"]
+# del acc_df["epoch (ms)"]
+# del acc_df["time (01:00)"]
+# del acc_df["elapsed (s)"]
+
+# del gyro_df["epoch (ms)"]
+# del gyro_df["time (01:00)"]
+# del gyro_df["elapsed (s)"]
 
 # --------------------------------------------------------------
 # Turn into function
@@ -105,6 +105,8 @@ def create_data(files):
 
         # Creating a dataframe from the CSV file and then creating new columns for the above variables.
         df = pd.read_csv(f)
+        print(f"Columns in {f}: {df.columns.tolist()}")
+
         df["Participant"] = participant
         df["Label"] = label
         df["Category"] = category
@@ -205,4 +207,4 @@ data_resample.to_pickle(
 #     file_path='../../artifacts/Data_resample.pkl',
 #     obj=data_resample
 # )
-#logging.info("Data_resample is Saved in pickle format")
+# logging.info("Data_resample is Saved in pickle format")
