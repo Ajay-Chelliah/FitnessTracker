@@ -140,4 +140,4 @@ rep_df
 # --------------------------------------------------------------
 
 error = mean_absolute_error(rep_df["reps"], rep_df["reps_pred"]).round(2)
-rep_df.groupby(["label", "category"])["reps", "reps_pred"].mean().plot.bar()
+rep_df.groupby(["label", "category"])[["reps", "reps_pred"]].mean().plot(kind="bar")
